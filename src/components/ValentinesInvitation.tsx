@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Heart, X, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { generateInvitationStages } from "@/app/actions/generate-invitation";
+import { generateAcceptanceMessage } from "@/app/actions/generate-acceptance";
 
 interface ValentinesInvitationProps {
   partnerName: string;
@@ -17,6 +18,8 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
   const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [acceptanceMessage, setAcceptanceMessage] = useState<string>("");
+  const [loadingMessage, setLoadingMessage] = useState(false);
 
   useEffect(() => {
     const fetchStages = async () => {
@@ -52,13 +55,24 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
     }
   };
 
-  const handleYes = () => {
+  const handleYes = async () => {
     setAccepted(true);
+    setLoadingMessage(true);
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
     });
+
+    try {
+      const message = await generateAcceptanceMessage(partnerName);
+      setAcceptanceMessage(message);
+    } catch (error) {
+      console.error("Failed to generate acceptance message:", error);
+      setAcceptanceMessage(`I can't wait to spend Valentine's Day with you, ${partnerName}!`);
+    } finally {
+      setLoadingMessage(false);
+    }
   };
 
   if (loading) {
@@ -128,9 +142,15 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
               <h2 className="text-3xl font-bold text-pink-600 mb-4">
                 Yay! It&apos;s a date!
               </h2>
-              <p className="text-lg text-pink-500">
-                I can&apos;t wait to spend Valentine&apos;s Day with you, {partnerName}!
-              </p>
+              {loadingMessage ? (
+                <div className="flex justify-center items-center">
+                  <Loader2 className="w-6 h-6 animate-spin text-pink-500" />
+                </div>
+              ) : (
+                <p className="text-lg text-pink-500">
+                  {acceptanceMessage}
+                </p>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
