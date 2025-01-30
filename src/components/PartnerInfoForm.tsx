@@ -51,7 +51,7 @@ export function PartnerInfoForm({ onSubmit, isLoading }: PartnerInfoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Partner's Name</Label>
+        <Label htmlFor="name">Partner&apos;s Name</Label>
         <Input
           id="name"
           value={info.name}

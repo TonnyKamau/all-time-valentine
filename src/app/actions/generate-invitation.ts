@@ -2,7 +2,9 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export async function generateInvitationStages(partnerName: string): Promise<string[]> {
+export async function generateInvitationStages(
+  partnerName: string
+): Promise<string[]> {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -20,8 +22,8 @@ export async function generateInvitationStages(partnerName: string): Promise<str
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    let text = await response.text();
-    
+    const text = await response.text();
+
     console.log("Generated text:", text); // Log the generated text for debugging
 
     // Remove Markdown formatting if present

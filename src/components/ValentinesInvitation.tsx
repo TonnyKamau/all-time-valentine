@@ -126,10 +126,10 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
             >
               <Heart className="w-24 h-24 text-pink-500 mx-auto mb-4" />
               <h2 className="text-3xl font-bold text-pink-600 mb-4">
-                Yay! It's a date!
+                Yay! It&apos;s a date!
               </h2>
               <p className="text-lg text-pink-500">
-                I can't wait to spend Valentine's Day with you, {partnerName}!
+                I can&apos;t wait to spend Valentine&apos;s Day with you, {partnerName}!
               </p>
             </motion.div>
           )}
