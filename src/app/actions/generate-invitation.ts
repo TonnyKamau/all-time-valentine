@@ -23,10 +23,6 @@ export async function generateInvitationStages(
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = await response.text();
-
-    console.log("Generated text:", text); // Log the generated text for debugging
-
-    // Remove Markdown formatting if present
     const cleanedText = text.trim().replace(/^```json\s*|\s*```$/g, "");
 
     console.log("Cleaned Generated text:", cleanedText); // Log cleaned text
@@ -47,7 +43,6 @@ export async function generateInvitationStages(
     return stages;
   } catch (error) {
     console.error("Error generating invitation stages:", error);
-    // Return a fallback array of stages
     return [
       "Will you be my Valentine?",
       "Are you sure you don't want to be my Valentine?",
