@@ -50,17 +50,17 @@ export default function MessageGenerator() {
     }
   }
 
-  const shareMessage = async () => {
-    if (!generatedMessage?.id) return
+  // const shareMessage = async () => {
+  //   if (!generatedMessage?.id) return
 
-    try {
-      const shareUrl = `${window.location.origin}/share/${generatedMessage.id}`
-      await navigator.clipboard.writeText(shareUrl)
-      alert("Share link copied to clipboard!")
-    } catch (err) {
-      console.error("Failed to copy share link:", err)
-    }
-  }
+  //   try {
+  //     const shareUrl = `${window.location.origin}/share/${generatedMessage.id}`
+  //     await navigator.clipboard.writeText(shareUrl)
+  //     alert("Share link copied to clipboard!")
+  //   } catch (err) {
+  //     console.error("Failed to copy share link:", err)
+  //   }
+  // }
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
@@ -110,7 +110,7 @@ export default function MessageGenerator() {
                     variant="ghost"
                     size="icon"
                     className="text-gray-500 hover:text-gray-700"
-                    onClick={shareMessage}
+                    onClick={() => navigator.share({ text: generatedMessage.message })}
                   >
                     <Share2 className="h-4 w-4" />
                   </Button>
