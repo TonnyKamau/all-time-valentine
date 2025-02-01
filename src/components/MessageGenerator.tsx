@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Copy, Check, Share2 } from "lucide-react";
+import { Loader2, Copy, Check} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type {
   MessageType,
