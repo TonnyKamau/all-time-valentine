@@ -20,6 +20,9 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
   const [acceptanceMessage, setAcceptanceMessage] = useState<string>("");
   const [loadingMessage, setLoadingMessage] = useState(false);
   const [opened, setOpened] = useState(false);
+  const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 });
+  const [noButtonVisible, setNoButtonVisible] = useState(true);
+  const [yesButtons, setYesButtons] = useState([{ id: 0, x: 0, y: 0 }]);
 
   useEffect(() => {
     const fetchStages = async () => {
@@ -48,6 +51,29 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
   const handleNo = () => {
     if (stage < stages.length - 1) {
       setStage(stage + 1);
+      
+      // Random position within bounds
+      const newX = Math.random() * 200 - 100;
+      const newY = Math.random() * 200 - 100;
+      setNoButtonPosition({ x: newX, y: newY });
+
+      // Add new Yes button every other no click
+      if (stage % 2 === 0) {
+        setYesButtons(prev => [
+          ...prev,
+          {
+            id: prev.length,
+            x: Math.random() * 200 - 100,
+            y: Math.random() * 200 - 100
+          }
+        ]);
+      }
+
+      // Make no button disappear occasionally
+      if (stage % 3 === 2) {
+        setNoButtonVisible(false);
+        setTimeout(() => setNoButtonVisible(true), 1000);
+      }
     }
   };
 
@@ -124,17 +150,47 @@ export function ValentinesInvitation({ partnerName }: ValentinesInvitationProps)
                           <h2 className="text-2xl font-bold text-pink-600 mb-6">
                             {stages[stage]}
                           </h2>
-                          <div className="flex justify-center space-x-4">
-                            <Button onClick={handleYes} className="bg-pink-500 hover:bg-pink-600">
-                              Yes!
-                            </Button>
-                            <Button
-                              onClick={handleNo}
-                              variant="outline"
-                              className="border-pink-300 text-pink-500 hover:bg-pink-50"
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                          <div className="flex justify-center space-x-4 relative">
+                            {yesButtons.map((btn) => (
+                              <motion.div
+                                key={btn.id}
+                                initial={{ scale: 0 }}
+                                animate={{ 
+                                  scale: 1,
+                                  x: btn.x,
+                                  y: btn.y
+                                }}
+                                transition={{ type: "spring" }}
+                              >
+                                <Button 
+                                  onClick={handleYes} 
+                                  className="bg-pink-500 hover:bg-pink-600"
+                                >
+                                  Yes!
+                                </Button>
+                              </motion.div>
+                            ))}
+                            
+                            <AnimatePresence>
+                              {noButtonVisible && (
+                                <motion.div
+                                  animate={{
+                                    x: noButtonPosition.x,
+                                    y: noButtonPosition.y,
+                                    transition: { type: "spring" }
+                                  }}
+                                  exit={{ opacity: 0 }}
+                                >
+                                  <Button
+                                    onClick={handleNo}
+                                    variant="outline"
+                                    className="border-pink-300 text-pink-500 hover:bg-pink-50"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </motion.div>
                       ) : (

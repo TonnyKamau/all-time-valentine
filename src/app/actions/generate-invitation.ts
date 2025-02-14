@@ -17,7 +17,7 @@ export async function generateInvitationStages(
     const prompt = `Generate 10 unique and creative stages for a Valentine's Day invitation for ${partnerName}. 
     Each stage should be a question or statement that makes it increasingly hard for ${partnerName} to say no to being your Valentine. 
     The stages should progress from a simple invitation to more persuasive and playful requests. 
-    Make them romantic, funny, or clever, but keep each stage short (no more than 10 words).
+    Make them romantic, funny, or clever, and make sure there necessary emojis but keep each stage short (no more than 10 words).
     Format the output as a JSON array of strings.`;
 
     const result = await model.generateContent(prompt);

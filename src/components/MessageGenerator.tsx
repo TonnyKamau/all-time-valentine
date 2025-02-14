@@ -14,6 +14,7 @@ import { PartnerInfoForm } from "./PartnerInfoForm";
 import { MessageTypeSelector } from "./MessageTypeSelector";
 import { generateValentineMessage } from "@/app/actions/generate-message";
 import { ValentinesInvitation } from "./ValentinesInvitation";
+import CommentSection from "./CommentSection";
 
 export default function MessageGenerator() {
   const [partnerInfo, setPartnerInfo] = useState<PartnerInfo | null>(null);
@@ -144,6 +145,7 @@ export default function MessageGenerator() {
           partnerName={partnerInfo?.name || "My Valentine"}
         />
       )}
+       <CommentSection />
     </div>
   );
 }
