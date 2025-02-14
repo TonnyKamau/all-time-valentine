@@ -12,7 +12,8 @@ import {
   Twitter, 
   Facebook,
   Calendar,
-  Loader2 
+  Loader2,
+  Heart
 } from "lucide-react";
 
 // Constants for configuration
@@ -39,11 +40,13 @@ interface CommentData {
   twitter: string;
   facebook: string;
   comment: string;
+  likes: number;
 }
 
 interface Comment extends CommentData {
   _id: string;
   createdAt?: string;
+  hasLiked?: boolean;
 }
 
 interface ApiResponse {
@@ -110,7 +113,8 @@ const initialCommentState: CommentData = {
   instagram: '',
   twitter: '',
   facebook: '',
-  comment: ''
+  comment: '',
+  likes: 0
 };
 
 // Main Component
@@ -188,7 +192,7 @@ const CommentSection: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await enhancedFetch('/api/comment', {
+      const response = await enhancedFetch('/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -217,6 +221,34 @@ const CommentSection: React.FC = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleLike = async (commentId: string) => {
+    try {
+      const response = await enhancedFetch(`/api/comments/${commentId}/like`, {
+        method: 'POST',
+      });
+      
+      const { data, error }: ApiResponse = await response.json();
+      
+      if (data && !Array.isArray(data)) {
+        setComments(prevComments => 
+          prevComments.map(comment => 
+            comment._id === commentId
+              ? { ...comment, likes: data.likes, hasLiked: true }
+              : comment
+          )
+        );
+      } else {
+        throw new Error(error || 'Failed to like comment');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to like comment",
+        variant: "destructive"
+      });
     }
   };
 
@@ -375,13 +407,30 @@ const CommentSection: React.FC = () => {
                         )}
                       </div>
                     </div>
-                    <p className="text-gray-700 mb-2 break-words whitespace-pre-wrap">{comment.comment}</p>
-                    {comment.createdAt && (
-                      <div className="flex items-center gap-1 text-sm text-gray-500">
-                        <Calendar className="w-4 h-4" />
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </div>
-                    )}
+                    <p className="text-gray-700 mb-2 break-words whitespace-pre-wrap">
+                      {comment.comment}
+                    </p>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      {comment.createdAt && (
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </div>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={`flex items-center gap-1 ${
+                          comment.hasLiked ? 'text-pink-600' : ''
+                        }`}
+                        onClick={() => handleLike(comment._id)}
+                        disabled={comment.hasLiked}
+                      >
+                        <Heart className="w-4 h-4"
+                         />
+                        <span>{comment.likes || 0}</span>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
