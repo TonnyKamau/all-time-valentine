@@ -192,7 +192,7 @@ const CommentSection: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await enhancedFetch('/api/comments', {
+      const response = await enhancedFetch('/api/comment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
