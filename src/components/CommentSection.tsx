@@ -59,7 +59,7 @@ const CommentSection: React.FC = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch('/api/comment');
+      const response = await fetch('/api/comments');
       const { data, error }: ApiResponse = await response.json();
       
       if (response.ok && data) {
