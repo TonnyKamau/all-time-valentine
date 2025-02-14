@@ -160,9 +160,13 @@ const CommentSection: React.FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {
     const { name, value } = e.target;
+    
+    // Only trim for social media fields, preserve spaces for name and comment
+    const shouldTrim = ['instagram', 'twitter', 'facebook'].includes(name);
+    
     setNewComment(prev => ({
       ...prev,
-      [name]: value.trim()
+      [name]: shouldTrim ? value.trim() : value
     }));
   };
 
@@ -288,7 +292,7 @@ const CommentSection: React.FC = () => {
                 onChange={handleChange}
                 placeholder="Share your thoughts..."
                 required
-                className="mt-1 min-h-[100px]"
+                className="mt-1 min-h-[100px] whitespace-pre-wrap"
                 disabled={isLoading}
               />
             </div>
@@ -371,7 +375,7 @@ const CommentSection: React.FC = () => {
                         )}
                       </div>
                     </div>
-                    <p className="text-gray-700 mb-2 break-words">{comment.comment}</p>
+                    <p className="text-gray-700 mb-2 break-words whitespace-pre-wrap">{comment.comment}</p>
                     {comment.createdAt && (
                       <div className="flex items-center gap-1 text-sm text-gray-500">
                         <Calendar className="w-4 h-4" />
